@@ -1,17 +1,19 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.product.DiscountedProduct;
+import org.skypro.skyshop.product.FixPriceProduct;
 
 public class App {
 
     public static void main(String[] args) {
-        Product product1 = new Product("Ноутбук", 90000);
-        Product product2 = new Product("Смартфон", 100000);
-        Product product3 = new Product("Наушники", 2000);
-        Product product4 = new Product("Часы", 22000);
-        Product product5 = new Product("Зарядное устройство", 300);
-        Product product6 = new Product("Планшет", 40000);
+        SimpleProduct product1 = new SimpleProduct("Ноутбук", 90000);
+        DiscountedProduct product2 = new DiscountedProduct("Смартфон", 100000, 20);
+        FixPriceProduct product3 = new FixPriceProduct("Наушники");
+        SimpleProduct product4 = new SimpleProduct("Часы", 22000);
+        DiscountedProduct product5 = new DiscountedProduct("Зарядное устройство", 300, 5);
+        SimpleProduct product6 = new SimpleProduct("Планшет", 40000);
 
         ProductBasket basket = new ProductBasket();
 
@@ -32,7 +34,7 @@ public class App {
         basket.printBasket();
 
         // Получение стоимости корзины с несколькими товарами:
-        System.out.println("    Получение стоимости корзины с несколькими товарами:");
+        System.out.println("Получение стоимости корзины с несколькими товарами:");
         System.out.println("Общая стоимость: " + basket.getTotalPrice());
 
         // Поиск товара, который есть в корзине
