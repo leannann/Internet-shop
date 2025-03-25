@@ -1,9 +1,11 @@
 package org.skypro.skyshop;
 
+import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
+import org.skypro.skyshop.search.SearchEngine;
 
 public class App {
 
@@ -60,5 +62,47 @@ public class App {
         // Поиск товара по имени в пустой корзине
         System.out.println("Поиск товара по имени в пустой корзине:");
         System.out.println("Поиск ноутбука после очистки: " + basket.containsProduct("Ноутбук"));
+
+        // Создание поискового движка
+        SearchEngine searchEngine = new SearchEngine(10);
+        searchEngine.add(product1);
+        searchEngine.add(product2);
+        searchEngine.add(product3);
+        searchEngine.add(product4);
+        searchEngine.add(product5);
+
+        // Добавление статей
+        Article article1 = new Article("Обзор ноутбуков", "Как выбрать лучший ноутбук для работы и игр.");
+        Article article2 = new Article("Сравнение смартфонов", "Смартфоны 2025 года: что выбрать?");
+        searchEngine.add(article1);
+        searchEngine.add(article2);
+
+        // Демонстрация поиска
+        System.out.println("Результаты поиска по 'ноутбук' (статья):");
+        for (var result : searchEngine.search("ноутбук")) {
+            if (result != null) {
+                System.out.println(result.getStringRepresentation());
+            }
+        }
+        System.out.println("Результаты поиска по 'смартфон' (статья):");
+        for (var result : searchEngine.search("смартфон")) {
+            if (result != null) {
+                System.out.println(result.getStringRepresentation());
+            }
+        }
+
+        System.out.println("Результаты поиска по 'Часы' (продукт):");
+        for (var result : searchEngine.search("Часы")) {
+            if (result != null) {
+                System.out.println(result.getStringRepresentation());
+            }
+        }
+
+        System.out.println("Результаты поиска по 'Наушники' (продукт):");
+        for (var result : searchEngine.search("Наушники")) {
+            if (result != null) {
+                System.out.println(result.getStringRepresentation());
+            }
+        }
     }
 }
