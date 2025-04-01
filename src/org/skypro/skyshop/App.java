@@ -2,12 +2,15 @@ package org.skypro.skyshop;
 
 import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
+
+import java.util.List;
 
 public class App {
 
@@ -28,10 +31,6 @@ public class App {
         basket.addProduct(product3);
         basket.addProduct(product4);
         basket.addProduct(product5);
-
-        // Добавление продукта в заполненную корзину в которой нет места
-        System.out.println("Добавление продукта в заполненную корзину в которой нет места:");
-        basket.addProduct(product6);
 
         // Печать содержимого корзины с несколькими товарами
         System.out.println("Печать содержимого корзины с несколькими товарами:");
@@ -66,7 +65,7 @@ public class App {
         System.out.println("Поиск ноутбука после очистки: " + basket.containsProduct("Ноутбук"));
 
         // Создание поискового движка
-        SearchEngine searchEngine = new SearchEngine(10);
+        SearchEngine searchEngine = new SearchEngine();
         searchEngine.add(product1);
         searchEngine.add(product2);
         searchEngine.add(product3);
@@ -148,7 +147,7 @@ public class App {
         // Демонстрация нового метода поиска
         System.out.println("Демонстрация нового метода поиска:");
 
-        SearchEngine engine = new SearchEngine(5);
+        SearchEngine engine = new SearchEngine();
         engine.add(new SimpleProduct("молоко", 50));
         engine.add(new SimpleProduct("шоколад молочный", 100));
         engine.add(new DiscountedProduct("сыр", 200, 15));
@@ -170,6 +169,48 @@ public class App {
         } catch (BestResultNotFound e) {
             System.out.println("Ошибка поиска: " + e.getMessage());
         }
+
+        // Добавляем продукты
+        basket.addProduct(new SimpleProduct("молоко", 50));
+        basket.addProduct(new DiscountedProduct("сыр", 200, 20));
+        basket.addProduct(new SimpleProduct("молоко", 60));
+        basket.addProduct(new SimpleProduct("хлеб", 30));
+
+        // Вывести содержимое корзины
+        System.out.println("Содержимое корзины:");
+        basket.printBasket();
+
+        // Удалить существующий продукт из корзины: "молоко"
+        List<Product> removed = basket.removeProductsByName("молоко");
+
+        System.out.println("Удалённые продукты:");
+        for (Product p : removed) {
+            System.out.println(p);
+        }
+
+        // Вывести содержимое корзины
+        System.out.println("Содержимое корзины после удаления 'молоко':");
+        basket.printBasket();
+
+        // Удалить несуществующий продукт: "йогурт"
+        System.out.println("Удаляем несуществующий продукт: йогурт");
+        List<Product> removedNone = basket.removeProductsByName("йогурт");
+
+        // Проверить, что список удаленных продуктов пустой и вывести сообщение “Список пуст”
+        if (removedNone.isEmpty()) {
+            System.out.println("Список пуст");
+        }
+        else {
+            System.out.println("Удалённые продукты:");
+            for (Product p : removedNone) {
+                System.out.println(p);
+            }
+        }
+
+        // Вывести содержимое корзины на экран
+        System.out.println("Содержимое корзины после попытки удаления 'йогурт':");
+        basket.printBasket();
+
 
     }
 }
