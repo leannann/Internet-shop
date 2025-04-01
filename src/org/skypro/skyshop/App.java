@@ -5,7 +5,9 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
+import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngine;
+import org.skypro.skyshop.search.Searchable;
 
 public class App {
 
@@ -104,5 +106,70 @@ public class App {
                 System.out.println(result.getStringRepresentation());
             }
         }
+
+        // Демонстрация работы исключений
+        System.out.println("Демонстрация работы исключений:");
+        try {
+            SimpleProduct product7 = new SimpleProduct("", 40000);
+        } catch (Exception e) {
+            System.out.println("Название продукта не может быть пустым или состоять только из пробелов");
+        }
+
+        try {
+            SimpleProduct product8 = new SimpleProduct("      ", 40000);
+        } catch (Exception e) {
+            System.out.println("Название продукта не может быть пустым или состоять только из пробелов");
+        }
+
+        try {
+            SimpleProduct product9 = new SimpleProduct("Планшет", 0);
+        } catch (Exception e) {
+            System.out.println("Цена продукта должна быть строго больше 0");
+        }
+
+        try {
+            SimpleProduct product9 = new SimpleProduct("Планшет", -4535);
+        } catch (Exception e) {
+            System.out.println("Цена продукта должна быть строго больше 0");
+        }
+
+        try {
+            DiscountedProduct product10 = new DiscountedProduct("Планшет", 45000, 110);
+        } catch (Exception e) {
+            System.out.println("Скидка должна быть в диапазоне от 0 до 100 включительно");
+        }
+
+        try {
+            DiscountedProduct product10 = new DiscountedProduct("Планшет", 45000, -110);
+        } catch (Exception e) {
+            System.out.println("Скидка должна быть в диапазоне от 0 до 100 включительно");
+        }
+
+        // Демонстрация нового метода поиска
+        System.out.println("Демонстрация нового метода поиска:");
+
+        SearchEngine engine = new SearchEngine(5);
+        engine.add(new SimpleProduct("молоко", 50));
+        engine.add(new SimpleProduct("шоколад молочный", 100));
+        engine.add(new DiscountedProduct("сыр", 200, 15));
+
+        // Когда нужный объект существует
+        System.out.println("когда нужный объект существует:");
+        try {
+            Searchable bestMatch = engine.findBestMatch("мол");
+            System.out.println("Найден лучший результат: " + bestMatch);
+        } catch (BestResultNotFound e) {
+            System.out.println("Ошибка поиска: " + e.getMessage());
+        }
+
+        //  Поиск неудачен — нет подходящего объекта
+        System.out.println("Поиск неудачен — нет подходящего объекта:");
+        try {
+            Searchable bestMatch = engine.findBestMatch("йогурт");
+            System.out.println("Найден лучший результат: " + bestMatch);
+        } catch (BestResultNotFound e) {
+            System.out.println("Ошибка поиска: " + e.getMessage());
+        }
+
     }
 }
