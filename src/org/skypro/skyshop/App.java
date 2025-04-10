@@ -11,6 +11,9 @@ import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
+import java.util.Map;
+
+import static org.skypro.skyshop.search.SearchEngine.printSearchResults;
 
 public class App {
 
@@ -80,31 +83,20 @@ public class App {
 
         // Демонстрация поиска
         System.out.println("Результаты поиска по 'ноутбук' (статья):");
-        for (var result : searchEngine.search("ноутбук")) {
-            if (result != null) {
-                System.out.println(result.getStringRepresentation());
-            }
-        }
+        Map<String, Searchable> searchResults = searchEngine.search("ноутбук");
+        printSearchResults(searchResults);
+
         System.out.println("Результаты поиска по 'смартфон' (статья):");
-        for (var result : searchEngine.search("смартфон")) {
-            if (result != null) {
-                System.out.println(result.getStringRepresentation());
-            }
-        }
+        searchResults = searchEngine.search("смартфон");
+        printSearchResults(searchResults);
 
         System.out.println("Результаты поиска по 'Часы' (продукт):");
-        for (var result : searchEngine.search("Часы")) {
-            if (result != null) {
-                System.out.println(result.getStringRepresentation());
-            }
-        }
+        searchResults = searchEngine.search("Часы");
+        printSearchResults(searchResults);
 
         System.out.println("Результаты поиска по 'Наушники' (продукт):");
-        for (var result : searchEngine.search("Наушники")) {
-            if (result != null) {
-                System.out.println(result.getStringRepresentation());
-            }
-        }
+        searchResults = searchEngine.search("Наушники");
+        printSearchResults(searchResults);
 
         // Демонстрация работы исключений
         System.out.println("Демонстрация работы исключений:");
