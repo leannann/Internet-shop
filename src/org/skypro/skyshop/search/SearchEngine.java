@@ -1,26 +1,34 @@
 package org.skypro.skyshop.search;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SearchEngine {
-    private final List<Searchable> items = new ArrayList<>();
+    private final Set<Searchable> items = new HashSet<>();
 
     public void add(Searchable item) {
         items.add(item);
     }
 
-    public Map<String, Searchable> search(String query) {
-        Map<String, Searchable> results = new TreeMap<>();
+    public Set<Searchable> search(String query) {
+        Comparator<Searchable> searchResultComparator = (s1, s2) -> {
+            int lengthCompare = Integer.compare(s2.getName().length(), s1.getName().length());
+            if (lengthCompare != 0) {
+                return lengthCompare;
+            }
+            return s1.getName().compareTo(s2.getName());
+        };
+
+        Set<Searchable> results = new TreeSet<>(searchResultComparator);
+
         for (Searchable item : items) {
             if (item.getSearchTerm().contains(query)) {
-                results.put(item.getName(), item);
+                results.add(item);
             }
         }
+
         return results;
     }
+
 
     // Поиск самого подходящего элемента
     public Searchable findBestMatch(String search) throws BestResultNotFound {
@@ -58,12 +66,15 @@ public class SearchEngine {
         return count;
     }
 
-    public static void printSearchResults(Map<String, Searchable> results) {
+    public static void printSearchResults(SearchEngine engine, String query) {
+        Set<Searchable> results = engine.search(query);
+
+        System.out.println("Результаты поиска по запросу \"" + query + "\":");
         if (results.isEmpty()) {
             System.out.println("Ничего не найдено.");
         } else {
-            for (Map.Entry<String, Searchable> entry : results.entrySet()) {
-                System.out.println("Имя: " + entry.getKey() + " | Объект: " + entry.getValue());
+            for (Searchable item : results) {
+                System.out.println(item); // item.toString(), где имя уже присутствует
             }
         }
     }
