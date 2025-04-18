@@ -82,21 +82,13 @@ public class App {
         searchEngine.add(article2);
 
         // Демонстрация поиска
-        System.out.println("Результаты поиска по 'ноутбук' (статья):");
-        Map<String, Searchable> searchResults = searchEngine.search("ноутбук");
-        printSearchResults(searchResults);
+        printSearchResults(searchEngine, "ноутбук");
 
-        System.out.println("Результаты поиска по 'смартфон' (статья):");
-        searchResults = searchEngine.search("смартфон");
-        printSearchResults(searchResults);
+        printSearchResults(searchEngine, "смартфон");
 
-        System.out.println("Результаты поиска по 'Часы' (продукт):");
-        searchResults = searchEngine.search("Часы");
-        printSearchResults(searchResults);
+        printSearchResults(searchEngine, "Часы");
 
-        System.out.println("Результаты поиска по 'Наушники' (продукт):");
-        searchResults = searchEngine.search("Наушники");
-        printSearchResults(searchResults);
+        printSearchResults(searchEngine, "Наушники");
 
         // Демонстрация работы исключений
         System.out.println("Демонстрация работы исключений:");
