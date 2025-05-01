@@ -5,55 +5,52 @@ import org.skypro.skyshop.product.Product;
 import java.util.*;
 
 public class ProductBasket {
-    private final Map<String, List<Product>> productsByName = new HashMap<>();;
-
+    private final Map<String, List<Product>> products = new HashMap<>();
 
     public void addProduct(Product product) {
-        productsByName
-                .computeIfAbsent(product.getProductName(), k -> new ArrayList<>())
-                .add(product);
+        products.computeIfAbsent(product.getProductName(), k -> new ArrayList<>()).add(product);
     }
 
     public int getTotalPrice() {
-        int total = 0;
-        for (List<Product> productList : productsByName.values()) {
-            for (Product product : productList) {
-                total += product.getPrice();
-            }
-        }
-        return total;
+        return products.values().stream()
+                .flatMap(Collection::stream)
+                .mapToInt(Product::getPrice)
+                .sum();
     }
 
     public void printBasket() {
-        if (productsByName.isEmpty()) {
+        if (products.isEmpty()) {
             System.out.println("В корзине пусто");
             return;
         }
 
-        int specialCount = 0;
-        for (List<Product> productList : productsByName.values()) {
-            for (Product product : productList) {
-                System.out.println(product);
-                if (product.isSpecial()) {
-                    specialCount++;
-                }
-            }
-        }
+        products.values().stream()
+                .flatMap(Collection::stream)
+                .forEach(product -> System.out.println(product));
 
         System.out.println("Итого: " + getTotalPrice());
-        System.out.println("Специальных товаров: " + specialCount);
+        System.out.println("Специальных товаров: " + getSpecialCount());
+    }
+
+    private long getSpecialCount() {
+        return products.values().stream()
+                .flatMap(Collection::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
     public boolean containsProduct(String name) {
-        return productsByName.containsKey(name);
+        return products.containsKey(name);
     }
 
     public void clearBasket() {
-        productsByName.clear();
+        products.clear();
     }
 
     public List<Product> removeProductsByName(String name) {
-        List<Product> removed = productsByName.remove(name);
-        return removed != null ? removed : Collections.emptyList();
+        if (products.containsKey(name)) {
+            return products.remove(name);
+        }
+        return new ArrayList<>();
     }
 }

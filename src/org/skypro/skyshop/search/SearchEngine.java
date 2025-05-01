@@ -1,6 +1,7 @@
 package org.skypro.skyshop.search;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
     private final Set<Searchable> items = new HashSet<>();
@@ -10,25 +11,16 @@ public class SearchEngine {
     }
 
     public Set<Searchable> search(String query) {
-        Comparator<Searchable> searchResultComparator = (s1, s2) -> {
-            int lengthCompare = Integer.compare(s2.getName().length(), s1.getName().length());
-            if (lengthCompare != 0) {
-                return lengthCompare;
-            }
-            return s1.getName().compareTo(s2.getName());
-        };
-
-        Set<Searchable> results = new TreeSet<>(searchResultComparator);
-
-        for (Searchable item : items) {
-            if (item.getSearchTerm().contains(query)) {
-                results.add(item);
-            }
-        }
-
-        return results;
+        return items.stream()
+                .filter(item -> item.getSearchTerm().contains(query))
+                .collect(Collectors.toCollection(() ->
+                        new TreeSet<>(Comparator
+                                .comparingInt((Searchable s) -> s.getSearchTerm().length())
+                                .reversed()
+                                .thenComparing(Searchable::getSearchTerm)
+                        )
+                ));
     }
-
 
     // Поиск самого подходящего элемента
     public Searchable findBestMatch(String search) throws BestResultNotFound {
@@ -74,7 +66,7 @@ public class SearchEngine {
             System.out.println("Ничего не найдено.");
         } else {
             for (Searchable item : results) {
-                System.out.println(item); // item.toString(), где имя уже присутствует
+                System.out.println(item);
             }
         }
     }
